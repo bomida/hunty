@@ -2,6 +2,19 @@
 
 import { useState, useEffect, useRef, useActionState, useTransition } from 'react'
 
+function BtnSpinner() {
+    return (
+        <svg
+            width="13" height="13" viewBox="0 0 13 13" fill="none"
+            style={{ animation: 'spin 0.7s linear infinite', flexShrink: 0 }}
+            aria-hidden="true"
+        >
+            <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.25" />
+            <path d="M6.5 1.5a5 5 0 0 1 5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+    )
+}
+
 type ActionResult = { error?: string; success?: boolean } | null
 
 type Props = {
@@ -159,7 +172,7 @@ export default function SettingsForm({
                                             className="btn btn-primary"
                                             disabled={!nicknameDirty || !nicknameValid || nicknameIsPending}
                                         >
-                                            저장
+                                            {nicknameIsPending ? <><BtnSpinner />저장 중…</> : '저장'}
                                         </button>
                                     </div>
                                 </div>
@@ -262,7 +275,7 @@ export default function SettingsForm({
                                         onClick={handleAlarmSave}
                                         disabled={!alarmDirty || isPendingAlarm}
                                     >
-                                        저장
+                                        {isPendingAlarm ? <><BtnSpinner />저장 중…</> : '저장'}
                                     </button>
                                 </div>
                             </div>

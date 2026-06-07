@@ -5,6 +5,7 @@ import { getDashboardStats, getKanbanApplications, type Application } from '@/li
 import { getUserProfile } from '@/lib/supabase/profile'
 import { getCodesByGroup } from '@/lib/supabase/codes'
 import { APPLY_STATUS_VARIANT, KANBAN_COLUMNS } from '@/lib/codes'
+import { encodeId } from '@/lib/id'
 
 // ── 유틸 ────────────────────────────────────────────────────────
 function calcDday(dateStr: string): { label: string; variant: string } {
@@ -143,7 +144,7 @@ export default async function DashboardPage() {
                                     const isWaiting = app.apply_status === 'WAITING'
 
                                     return (
-                                        <Link key={app.application_id} href={`/companies/${app.application_id}`} className={`card ${isUrgent ? 'urgent' : ''}`}>
+                                        <Link key={app.application_id} href={`/companies/${encodeId(app.application_id)}`} className={`card ${isUrgent ? 'urgent' : ''}`}>
                                             <div className="flex items-start justify-between gap-2">
                                                 <div className="min-w-0">
                                                     <div className="card-name">{app.company_name}</div>

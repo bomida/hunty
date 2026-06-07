@@ -12,6 +12,7 @@ import {
 import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { type Application } from '@/lib/supabase/applications'
+import { encodeId } from '@/lib/id'
 
 export type StatusMap = Record<string, { label: string; variant: string }>
 export type PlatformMap = Record<string, string>
@@ -156,7 +157,7 @@ export default function ApplicationsTable({ data, statusMap, platformMap }: Prop
                                 <tr
                                     key={row.id}
                                     style={{ borderBottom: '1px solid var(--hairline-soft)', cursor: 'pointer' }}
-                                    onClick={() => router.push(`/companies/${row.original.application_id}`)}
+                                    onClick={() => router.push(`/companies/${encodeId(row.original.application_id)}`)}
                                     onMouseEnter={e => { e.currentTarget.style.background = 'var(--surface-soft)' }}
                                     onMouseLeave={e => { e.currentTarget.style.background = '' }}
                                 >
@@ -187,14 +188,15 @@ export default function ApplicationsTable({ data, statusMap, platformMap }: Prop
                                 key={i}
                                 onClick={() => table.setPageIndex(i)}
                                 style={{
-                                    minWidth: 32, height: 36,
+                                    width: 26, height: 26,
                                     borderRadius: 'var(--r-md)',
                                     border: '1px solid var(--hairline-strong)',
                                     background: i === pageIndex ? 'var(--ink-deep)' : 'transparent',
                                     color: i === pageIndex ? 'var(--on-dark)' : 'var(--ink)',
-                                    fontSize: 13, fontWeight: i === pageIndex ? 600 : 500,
-                                    cursor: 'pointer', padding: '0 8px',
+                                    fontSize: 12, fontWeight: i === pageIndex ? 600 : 500,
+                                    cursor: 'pointer', padding: 0,
                                     transition: 'background 0.15s ease',
+                                    display: 'grid', placeItems: 'center', flexShrink: 0,
                                 }}
                             >
                                 {i + 1}
