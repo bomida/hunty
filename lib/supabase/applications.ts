@@ -13,6 +13,10 @@ export type NewApplicationData = {
     apply_date_to?: string | null
     interview_date?: string | null
     memo?: string | null
+    work_type?: string | null
+    job_post_url?: string | null
+    requirements?: string | null
+    benefits?: string | null
 }
 
 export type NewInterviewNote = {
@@ -41,6 +45,10 @@ export async function createApplication(
             apply_date_to: data.apply_date_to ?? null,
             interview_date: data.interview_date ?? null,
             memo: data.memo ?? null,
+            work_type: data.work_type ?? null,
+            job_post_url: data.job_post_url ?? null,
+            requirements: data.requirements ?? null,
+            benefits: data.benefits ?? null,
             insert_time: now,
             update_time: now,
         })
@@ -88,6 +96,10 @@ export type Application = {
 export type ApplicationDetail = Application & {
     contract_type: string | null
     memo: string | null
+    work_type: string | null
+    job_post_url: string | null
+    requirements: string | null
+    benefits: string | null
     interviewNotes: { question_no: number; question: string; answer: string | null }[]
 }
 
@@ -99,7 +111,7 @@ export async function getApplicationById(
 
     const { data: app, error } = await supabase
         .from('jobApplication')
-        .select('application_id, company_name, apply_status, apply_position, apply_platform, apply_platform_memo, contract_type, apply_date_to, interview_date, memo, insert_time')
+        .select('application_id, company_name, apply_status, apply_position, apply_platform, apply_platform_memo, contract_type, apply_date_to, interview_date, memo, work_type, job_post_url, requirements, benefits, insert_time')
         .eq('application_id', applicationId)
         .eq('id', userId)
         .single()
@@ -138,6 +150,10 @@ export async function updateApplication(
             apply_date_to: data.apply_date_to ?? null,
             interview_date: data.interview_date ?? null,
             memo: data.memo ?? null,
+            work_type: data.work_type ?? null,
+            job_post_url: data.job_post_url ?? null,
+            requirements: data.requirements ?? null,
+            benefits: data.benefits ?? null,
             update_time: now,
         })
         .eq('application_id', applicationId)

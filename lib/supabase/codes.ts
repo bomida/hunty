@@ -11,6 +11,7 @@ export async function getCodesByGroup(groupCode: string): Promise<CodeItem[]> {
         .from('comCodeMaster')
         .select('sub_code, code_name')
         .eq('group_code', groupCode)
+        .order('sort_seq', { ascending: true })
     if (error) {
         console.error('codes error:', error.message, error.code, error.details, error.hint)
         throw error

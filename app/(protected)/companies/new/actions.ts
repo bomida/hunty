@@ -18,6 +18,10 @@ export type SavePayload = {
     deadline: string
     interviewDate: string
     memo: string
+    workType: string
+    jobPostUrl: string
+    requirements: string
+    benefits: string
     questions: { q: string; a: string }[]
 }
 
@@ -43,6 +47,10 @@ export async function createApplicationAction(payload: SavePayload): Promise<{ e
                 apply_date_to: payload.deadline ? stripDashes(payload.deadline) : null,
                 interview_date: payload.interviewDate ? stripDashes(payload.interviewDate) : null,
                 memo: payload.memo.trim() || null,
+                work_type: payload.workType.trim() || null,
+                job_post_url: payload.jobPostUrl.trim() || null,
+                requirements: payload.requirements.trim() || null,
+                benefits: payload.benefits.trim() || null,
             },
             payload.questions.map(q => ({ question: q.q, answer: q.a })),
         )

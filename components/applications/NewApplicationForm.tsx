@@ -1,12 +1,27 @@
 'use client'
 
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { isRedirectError } from 'next/dist/client/components/redirect-error'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import type { CodeItem } from '@/lib/supabase/codes'
 import type { SavePayload } from '@/app/(protected)/companies/new/actions'
 import { APPLY_STATUS_VARIANT } from '@/lib/codes'
+
+/* ── BtnSpinner ──────────────────────────────────────────────────────── */
+
+function BtnSpinner() {
+    return (
+        <svg
+            width="13" height="13" viewBox="0 0 13 13" fill="none"
+            style={{ animation: 'spin 0.7s linear infinite', flexShrink: 0 }}
+            aria-hidden="true"
+        >
+            <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.25" />
+            <path d="M6.5 1.5a5 5 0 0 1 5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+    )
+}
 
 /* ── Icons ───────────────────────────────────────────────────────────── */
 
@@ -74,6 +89,26 @@ function BadgeRadio({
     )
 }
 
+/* ── FieldHintIcon ────────────────────────────────────────────────────── */
+
+function FieldHintIcon({ text }: { text: string }) {
+    return (
+        <span className="relative group inline-flex items-center ml-1" style={{ verticalAlign: 'middle', cursor: 'default' }}>
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true" style={{ color: 'var(--stone)', flexShrink: 0 }}>
+                <circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" strokeWidth="1.2" />
+                <path d="M6.5 4v3.5M6.5 9v.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+            </svg>
+            <span
+                className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2 py-1 rounded text-xs whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-50"
+                style={{ background: 'var(--ink-deep)', color: 'var(--on-dark)' }}
+                role="tooltip"
+            >
+                {text}
+            </span>
+        </span>
+    )
+}
+
 /* ── Field wrapper ────────────────────────────────────────────────────── */
 
 function Field({
@@ -83,6 +118,7 @@ function Field({
     children,
     error,
     caption,
+    hint,
     htmlFor,
     disabled,
 }: {
@@ -92,6 +128,7 @@ function Field({
     children: React.ReactNode
     error?: string
     caption?: string
+    hint?: string
     htmlFor?: string
     disabled?: boolean
 }) {
@@ -100,7 +137,7 @@ function Field({
             <label className="nf-label" htmlFor={htmlFor}>
                 {label}
                 {required && <span className="nf-req" aria-label="필수">*</span>}
-                {optional && <span className="nf-opt">(선택)</span>}
+                {hint && <FieldHintIcon text={hint} />}
             </label>
             {children}
             {error
@@ -135,6 +172,10 @@ type FormState = {
     deadline: string
     interviewDate: string
     memo: string
+    workType: string
+    jobPostUrl: string
+    requirements: string
+    benefits: string
     questions: { q: string; a: string }[]
 }
 
@@ -180,12 +221,23 @@ export default function NewApplicationForm({
         deadline: initialData?.deadline ?? '',
         interviewDate: initialData?.interviewDate ?? '',
         memo: initialData?.memo ?? '',
+        workType: initialData?.workType ?? '',
+        jobPostUrl: initialData?.jobPostUrl ?? '',
+        requirements: initialData?.requirements ?? '',
+        benefits: initialData?.benefits ?? '',
         questions: initialData?.questions ?? [],
     }
 
     const [form, setForm] = useState<FormState>(EMPTY)
     const [errors, setErrors] = useState<Record<string, string>>({})
     const [saving, setSaving] = useState(false)
+
+    useEffect(() => {
+        document.querySelectorAll<HTMLTextAreaElement>('.qa-text').forEach(el => {
+            el.style.height = '1px'
+            el.style.height = Math.max(42, el.scrollHeight) + 'px'
+        })
+    }, [])
     const [toast, setToast] = useState(false)
     const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
     const [deleteModalOpen, setDeleteModalOpen] = useState(false)
@@ -386,7 +438,81 @@ export default function NewApplicationForm({
                         </div>
                     </section>
 
-                    {/* ── Section 2 : 면접 질문 ─────────────────────────── */}
+                    {/* ── Section 2 : 채용 공고 정보 ───────────────────── */}
+                    <section className="nf-section">
+                        <div className="nf-sec-head">
+                            <div className="nf-sec-title">채용 공고 정보</div>
+                        </div>
+                        <div className="nf-sec-rule" />
+
+                        <div className="nf-sec-body">
+                            <div className="nf-grid-2">
+                                <div className="nf-col">
+                                    <Field label="근무형태" optional htmlFor="workType">
+                                        <input
+                                            id="workType"
+                                            className="input"
+                                            type="text"
+                                            placeholder="예) 하이브리드 (주 2회 출근)"
+                                            value={form.workType}
+                                            onChange={e => setField('workType', e.target.value)}
+                                            autoComplete="off"
+                                        />
+                                    </Field>
+                                    <Field label="자격요건" optional htmlFor="requirements">
+                                        <textarea
+                                            id="requirements"
+                                            className="nf-textarea qa-text"
+                                            placeholder="예) 3년 이상의 프로덕트 디자인 경력, Figma 능숙"
+                                            value={form.requirements}
+                                            onChange={e => {
+                                                setField('requirements', e.target.value)
+                                                const el = e.target
+                                                el.style.height = '1px'
+                                                el.style.height = Math.max(42, el.scrollHeight) + 'px'
+                                            }}
+                                        />
+                                    </Field>
+                                </div>
+                                <div className="nf-col">
+                                    <Field label="채용정보 링크" optional htmlFor="jobPostUrl" hint="Ctrl+클릭 또는 Cmd+클릭으로 링크 열기">
+                                        <input
+                                            id="jobPostUrl"
+                                            className="input"
+                                            type="url"
+                                            placeholder="예) wanted.co.kr/wd/123456"
+                                            value={form.jobPostUrl}
+                                            onChange={e => setField('jobPostUrl', e.target.value)}
+                                            autoComplete="off"
+                                            onClick={e => {
+                                                if ((e.ctrlKey || e.metaKey) && form.jobPostUrl.trim()) {
+                                                    e.preventDefault()
+                                                    const url = form.jobPostUrl.trim()
+                                                    window.open(url.startsWith('http') ? url : `https://${url}`, '_blank', 'noopener,noreferrer')
+                                                }
+                                            }}
+                                        />
+                                    </Field>
+                                    <Field label="복지 및 혜택" optional htmlFor="benefits">
+                                        <textarea
+                                            id="benefits"
+                                            className="nf-textarea qa-text"
+                                            placeholder="예) 자율 출퇴근, 식대 지원, 도서 구입비"
+                                            value={form.benefits}
+                                            onChange={e => {
+                                                setField('benefits', e.target.value)
+                                                const el = e.target
+                                                el.style.height = '1px'
+                                                el.style.height = Math.max(42, el.scrollHeight) + 'px'
+                                            }}
+                                        />
+                                    </Field>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* ── Section 3 : 면접 질문 ─────────────────────────── */}
                     <section className="nf-section">
                         <div className="nf-sec-head">
                             <div className="nf-sec-title">면접 질문</div>
@@ -409,12 +535,16 @@ export default function NewApplicationForm({
                             <div className="qa-list">
                                 {form.questions.map((row, i) => (
                                     <div className="qa-row" key={i}>
-                                        <input
-                                            className="input"
-                                            type="text"
+                                        <textarea
+                                            className="nf-textarea qa-text"
                                             placeholder="면접 질문을 입력하세요"
                                             value={row.q}
-                                            onChange={e => updateQuestion(i, 'q', e.target.value)}
+                                            onChange={e => {
+                                                updateQuestion(i, 'q', e.target.value)
+                                                const el = e.target
+                                                el.style.height = '1px'
+                                                el.style.height = Math.max(42, el.scrollHeight) + 'px'
+                                            }}
                                         />
                                         <textarea
                                             className="nf-textarea qa-text"
@@ -441,7 +571,7 @@ export default function NewApplicationForm({
                         )}
                     </section>
 
-                    {/* ── Section 3 : 메모 ─────────────────────────────── */}
+                    {/* ── Section 4 : 메모 ─────────────────────────────── */}
                     <section className="nf-section">
                         <div className="nf-sec-head">
                             <div className="nf-sec-title">면접 후 회고</div>
@@ -505,7 +635,12 @@ export default function NewApplicationForm({
                             onClick={onSave}
                             disabled={saving}
                         >
-                            저장하기
+                            {saving ? (
+                                <>
+                                    <BtnSpinner />
+                                    저장 중…
+                                </>
+                            ) : '저장하기'}
                         </button>
                     </div>
                 </div>
@@ -547,7 +682,12 @@ export default function NewApplicationForm({
                                     await deleteAction()
                                 }}
                             >
-                                삭제
+                                {deleting ? (
+                                    <>
+                                        <BtnSpinner />
+                                        삭제 중…
+                                    </>
+                                ) : '삭제'}
                             </button>
                         </div>
                     </div>

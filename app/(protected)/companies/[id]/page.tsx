@@ -4,6 +4,7 @@ import { getApplicationById } from '@/lib/supabase/applications'
 import { getCodesByGroup } from '@/lib/supabase/codes'
 import NewApplicationForm from '@/components/applications/NewApplicationForm'
 import { updateApplicationAction, deleteApplicationAction } from './actions'
+import { decodeId } from '@/lib/id'
 
 export const metadata = { title: 'Hunty · 지원 수정' }
 
@@ -19,8 +20,8 @@ export default async function EditApplicationPage({
     params: Promise<{ id: string }>
 }) {
     const { id } = await params
-    const applicationId = Number(id)
-    if (!Number.isInteger(applicationId) || applicationId <= 0) notFound()
+    const applicationId = decodeId(id)
+    if (!applicationId) notFound()
 
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
@@ -45,6 +46,10 @@ export default async function EditApplicationPage({
         deadline: toFormDate(app.apply_date_to),
         interviewDate: toFormDate(app.interview_date),
         memo: app.memo ?? '',
+        workType: app.work_type ?? '',
+        jobPostUrl: app.job_post_url ?? '',
+        requirements: app.requirements ?? '',
+        benefits: app.benefits ?? '',
         questions: app.interviewNotes.map(n => ({ q: n.question, a: n.answer ?? '' })),
     }
 
