@@ -50,7 +50,8 @@
 | 소셜 로그인 | Google OAuth를 통한 1-click 로그인 |
 | 대시보드 | 지원 총계, 진행 중 건수, 합격 수, 면접 D-day 통계 카드 |
 | 지원 관리 | 기업별 지원 CRUD (상태 · 플랫폼 · 계약형태 · 메모 · 마감일) |
-| 면접 기록 | 지원 건별 면접 질문 / 답변 아카이빙 |
+| 채용 공고 정보 | 근무형태 · 채용정보 링크 · 자격요건 · 복지 및 혜택 기록 (Ctrl/Cmd+클릭으로 링크 바로 열기) |
+| 면접 기록 | 지원 건별 면접 질문 / 답변 아카이빙 (자동 높이 조절 textarea) |
 | 주간 트렌드 | 최근 지원 현황 주별 차트 |
 | 계정 설정 | 닉네임 변경, D-day 알림 기준일 설정, 로그아웃, 회원탈퇴 |
 | 세션 관리 | 일별 세션 갱신 — 당일 이후 자동 로그아웃 |
@@ -133,7 +134,7 @@ comCodeGroup ─── comCodeMaster  (공통코드)
 | 테이블 | 역할 |
 |--------|------|
 | `userProfile` | 닉네임, 알림 기준일, 관리자 여부 |
-| `jobApplication` | 기업명, 지원상태, 플랫폼, 계약형태, 마감일, 면접일, 메모 |
+| `jobApplication` | 기업명, 지원상태, 플랫폼, 계약형태, 마감일, 면접일, 메모, 근무형태, 채용정보 링크, 자격요건, 복지 및 혜택 |
 | `interviewNote` | 면접 질문/답변, 회차, 회차별 면접일 |
 | `jobApplicationFile` | 첨부 링크 URL |
 | `comCodeGroup` / `comCodeMaster` | 지원상태·플랫폼·계약형태 공통코드 |
@@ -227,7 +228,25 @@ await supabase.from('jobApplication')
     .single()                  // ← 0행이면 null → 즉시 throw
 ```
 
-### 5. 공통코드 테이블로 하드코딩 제거
+### 5. URL ID 난독화 — base64url 인코딩
+
+지원 상세 URL(`/companies/8`)에서 숫자 ID가 그대로 노출되는 것을 방지하기 위해 base64url 인코딩을 적용했습니다.
+
+- `/companies/8` → `/companies/OA` 형태로 변환
+- `lib/id.ts`의 `encodeId` / `decodeId` 함수로 인코딩/디코딩 처리
+- DB 변경 없음 — 라우팅 레이어에서만 변환
+- `Buffer` 대신 `btoa` / `atob` 사용 → 서버(Node.js 18+)·클라이언트 모두 동작
+
+```ts
+// 인코딩: 숫자 → base64url 문자열
+encodeId(8)         // → "OA"
+
+// 디코딩: base64url → 숫자 (유효하지 않으면 null)
+decodeId("OA")      // → 8
+decodeId("invalid") // → null → 404
+```
+
+### 6. 공통코드 테이블로 하드코딩 제거
 
 지원상태·플랫폼·계약형태 등 코드성 데이터를 `comCodeGroup` / `comCodeMaster` 테이블로 관리합니다.
 
