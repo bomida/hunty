@@ -1,28 +1,32 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
 import { getTodayKST } from '@/lib/date'
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
     const { searchParams, origin } = new URL(request.url)
     const code = searchParams.get('code')
 
     if (code) {
-        const cookieStore = await cookies()
+        // Buffer cookies so they can be written onto the redirect response.
+        // Using cookies() from next/headers + NextResponse.redirect() is unreliable —
+        // mutations on the framework cookie jar don't propagate to a manually-created NextResponse.
+        const pendingCookies: { name: string; value: string; options: object }[] = []
+
         const supabase = createServerClient(
             process.env.NEXT_PUBLIC_SUPABASE_URL!,
             process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
             {
                 cookies: {
-                    getAll() { return cookieStore.getAll() },
+                    getAll() {
+                        return request.cookies.getAll()
+                    },
                     setAll(cookiesToSet) {
-                        cookiesToSet.forEach(({ name, value, options }) =>
-                            cookieStore.set(name, value, options)
-                        )
+                        pendingCookies.push(...cookiesToSet)
                     },
                 },
             }
         )
+
         const { error } = await supabase.auth.exchangeCodeForSession(code)
         if (!error) {
             const { data: { user } } = await supabase.auth.getUser()
@@ -32,6 +36,11 @@ export async function GET(request: Request) {
 
             const redirectTo = isNewUser ? `${origin}/onboarding` : `${origin}/dashboard`
             const res = NextResponse.redirect(redirectTo)
+
+            pendingCookies.forEach(({ name, value, options }) =>
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                res.cookies.set(name, value, options as any)
+            )
             res.cookies.set('session-date', getTodayKST(), {
                 httpOnly: true,
                 sameSite: 'lax',
