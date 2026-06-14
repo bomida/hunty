@@ -13,9 +13,9 @@ import {
 import type { WeekData } from '@/lib/supabase/insights'
 
 const COLORS = {
-    apply: '#e0dcf5',
-    response: '#8b78e0',
-    interview: '#5645d4',
+    apply: '#fde8d0',
+    response: '#f5a060',
+    interview: '#dd5b00',
 }
 
 type TooltipProps = {

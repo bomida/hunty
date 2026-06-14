@@ -5,9 +5,9 @@
    ========================================================= */
 :root {
     /* Brand & Primary */
-    --primary: #5645d4;
-    --primary-pressed: #4534b3;
-    --primary-deep: #3a2a99;
+    --primary: #dd5b00;
+    --primary-pressed: #c24f00;
+    --primary-deep: #a84400;
     --on-primary: #ffffff;
     --brand-navy: #0a1530;
     --link-blue: #0075de;
@@ -88,7 +88,7 @@
     --sidebar-w: 248px;
 
     /* Shadows */
-    --shadow-kanban: rgba(15,15,15,.04) 0 1px 2px 0, rgba(15,15,15,.06) 0 8px 28px -4px, rgba(86,69,212,.08) 0 30px 60px -20px;
+    --shadow-kanban: rgba(15,15,15,.04) 0 1px 2px 0, rgba(15,15,15,.06) 0 8px 28px -4px, rgba(221,91,0,.08) 0 30px 60px -20px;
     --shadow-card: rgba(15,15,15,.04) 0 1px 2px 0, rgba(15,15,15,.06) 0 6px 24px -8px;
     --shadow-float: rgba(15,15,15,.06) 0 8px 24px -4px;
     --shadow-urgent: rgba(221,91,0,.10) 0 4px 12px 0;
@@ -193,24 +193,26 @@ body {
     padding: 6px 8px var(--s-lg);
 }
 
-.sb-brand .mark {
-    width: 28px;
-    height: 28px;
-    border-radius: var(--r-md);
-    background: var(--primary);
-    color: var(--on-primary);
-    display: grid;
-    place-items: center;
-    font-weight: 700;
-    font-size: 15px;
+.sb-logo {
+    font-size: 20px;
+    font-weight: 800;
     letter-spacing: -0.5px;
+    color: var(--ink);
+    position: relative;
+    display: inline-block;
+    line-height: 1;
+    padding-right: 11px;
 }
 
-.sb-brand .name {
-    font-weight: 600;
-    font-size: 18px;
-    color: var(--ink);
-    letter-spacing: -0.3px;
+.sb-logo-dot {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #ff7a2e;
+    display: block;
 }
 
 .sb-label {
@@ -544,7 +546,7 @@ body {
 /* Column status dot accents */
 .col.applied .dot  { background: var(--steel); }
 .col.interview .dot { background: var(--brand-orange); }
-.col.waiting .dot  { background: var(--primary); }
+.col.waiting .dot  { background: var(--brand-purple); }
 .col.result .dot   { background: var(--brand-green); }
 
 /* =========================================================
@@ -784,7 +786,7 @@ body {
 
 .input:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(86, 69, 212, .15);
+    box-shadow: 0 0 0 3px rgba(221, 91, 0, .18);
 }
 
 .input[readonly] {
@@ -1322,7 +1324,7 @@ body {
 .badge-group input:checked + .badge-pill[data-variant="gaveup"]    { background: var(--tint-gray);     color: var(--steel);              border-color: transparent; }
 
 .badge-group input:focus-visible + .badge-pill {
-    box-shadow: 0 0 0 3px rgba(86, 69, 212, .18);
+    box-shadow: 0 0 0 3px rgba(221, 91, 0, .22);
 }
 
 /* ── 폼 컨테이너 & 섹션 ───────────────────────────────────── */
@@ -1441,7 +1443,7 @@ body {
 
 .nf-textarea:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(86, 69, 212, .15);
+    box-shadow: 0 0 0 3px rgba(221, 91, 0, .18);
 }
 
 .nf-textarea::placeholder { color: var(--stone); }

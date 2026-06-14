@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getInsightsData } from '@/lib/supabase/insights'
 import WeeklyTrendChart from '@/components/insights/WeeklyTrendChart'
 
-const PP = ['#5645d4', '#6e5fda', '#8b78e0', '#aaa0e8', '#ccc7f2']
+const PP = ['#dd5b00', '#e87830', '#f5a060', '#f8c8a0', '#fde8d0']
 
 export default async function InsightsPage() {
     const supabase = await createClient()
@@ -66,7 +66,7 @@ export default async function InsightsPage() {
                         <div className="flex flex-col gap-2.5">
                             <div className="flex items-center gap-2">
                                 <span className="w-[30px] h-[30px] rounded-[8px] grid place-items-center flex-none"
-                                    style={{ background: 'var(--tint-lavender)', color: 'var(--primary)' }}>
+                                    style={{ background: 'var(--tint-peach)', color: 'var(--primary)' }}>
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                                         <path d="M14 2L2 6.8l4.4 1.6L8 13l2.2-4.2L14 2z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
                                         <path d="M14 2L6.4 8.4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
@@ -152,9 +152,9 @@ export default async function InsightsPage() {
                             <p className="mt-1 text-[13px]" style={{ color: 'var(--steel)' }}>지원 단계별 누적 — 최근 12주</p>
                         </div>
                         <div className="flex items-center gap-3 flex-wrap">
-                            <LegendDot color="#e0dcf5" label="지원" />
-                            <LegendDot color="#8b78e0" label="응답" />
-                            <LegendDot color="#5645d4" label="면접" />
+                            <LegendDot color="#fde8d0" label="지원" />
+                            <LegendDot color="#f5a060" label="응답" />
+                            <LegendDot color="#dd5b00" label="면접" />
                         </div>
                     </div>
                     <WeeklyTrendChart data={weeks} />
@@ -218,7 +218,7 @@ export default async function InsightsPage() {
                                 meta={`${funnelResponded}건 · 응답률 ${funnelRespondedPct}%`}
                                 pct={funnelRespondedPct}
                                 dropPct={100 - funnelRespondedPct}
-                                fillClass="bg-[#5645d4]"
+                                fillClass="bg-[#dd5b00]"
                                 textClass="text-white"
                             />
                             {/* 면접 진행 */}
@@ -227,7 +227,7 @@ export default async function InsightsPage() {
                                 meta={`${funnelInterview}건 · 지원 대비 ${funnelInterviewPct}%`}
                                 pct={funnelInterviewPct}
                                 dropPct={funnelRespondedPct > 0 ? funnelRespondedPct - funnelInterviewPct : 0}
-                                fillClass="bg-[#8b78e0]"
+                                fillClass="bg-[#f5a060]"
                                 textClass="text-white"
                             />
                             {/* 최종 합격 */}
@@ -236,8 +236,8 @@ export default async function InsightsPage() {
                                 meta={`${funnelPassed}건 · 면접 통과 ${interviewPassRate}%`}
                                 pct={funnelPassedPct}
                                 dropPct={funnelInterviewPct > 0 ? funnelInterviewPct - funnelPassedPct : 0}
-                                fillClass="bg-[#aaa0e8]"
-                                textClass="text-[#3a2a99]"
+                                fillClass="bg-[#fde8d0]"
+                                textClass="text-[#7a3000]"
                             />
                         </div>
                     </section>

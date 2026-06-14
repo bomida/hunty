@@ -34,20 +34,13 @@ function LoginForm() {
                 style={{ background: 'var(--canvas)', border: '1px solid var(--hairline)', width: 360 }}
             >
                 {/* Brand */}
-                <div className="flex flex-col items-center gap-3">
+                <div className="flex flex-col items-center gap-4">
                     <a
                         href="/"
-                        className="flex items-center justify-center font-bold text-xl"
-                        style={{
-                            width: 48, height: 48,
-                            borderRadius: 'var(--r-lg)',
-                            background: 'var(--primary)',
-                            color: 'var(--on-primary)',
-                            letterSpacing: '-0.5px',
-                            textDecoration: 'none',
-                        }}
+                        style={{ textDecoration: 'none', position: 'relative', display: 'inline-block', lineHeight: 1, paddingRight: 13 }}
                     >
-                        H
+                        <span style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.5px', color: 'var(--ink)' }}>Hunty</span>
+                        <span style={{ position: 'absolute', top: 2, right: 0, width: 9, height: 9, borderRadius: '50%', background: '#ff7a2e', display: 'block' }} aria-hidden="true" />
                     </a>
                     <div className="text-center">
                         <p className="font-semibold text-base" style={{ color: 'var(--ink)' }}>Hunty에 오신 것을 환영합니다</p>

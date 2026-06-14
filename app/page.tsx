@@ -7,10 +7,10 @@ export default function Home() {
             {/* ============ Nav ============ */}
             <header className="sticky top-0 z-50 bg-canvas border-b border-hairline px-8 max-[720px]:px-5">
                 <div className="max-w-[1200px] mx-auto h-16 flex items-center justify-between gap-6">
-                    <div className="flex items-center gap-[10px]">
-                        <div className="w-[30px] h-[30px] rounded-lg bg-primary text-white grid place-items-center font-bold text-[13px] tracking-[-0.5px]">H</div>
-                        <span className="font-semibold text-[15px] text-ink tracking-[-0.3px]">Hunty</span>
-                    </div>
+                    <span className="relative inline-block font-extrabold text-[20px] tracking-[-0.5px] text-ink pr-[11px] leading-none">
+                        Hunty
+                        <span className="absolute top-0 right-0 w-[7px] h-[7px] rounded-full" style={{ background: '#ff7a2e' }} aria-hidden="true" />
+                    </span>
                     <nav className="flex items-center gap-1 ml-9 flex-1">
                         {[['#features', '기능'], ['#how', '사용 방법'], ['#faq', 'FAQ']].map(([href, label]) => (
                             <a key={href} href={href} className="font-medium text-[12px] text-slate px-3 py-2 rounded-md">{label}</a>
@@ -28,7 +28,7 @@ export default function Home() {
                 <div className="max-w-[1200px] mx-auto grid grid-cols-[1.05fr_minmax(420px,1.4fr)] gap-16 items-center [&>*]:min-w-0 max-[1024px]:grid-cols-1 max-[1024px]:gap-10">
                     {/* Left */}
                     <div>
-                        <div className="inline-flex items-center gap-2 text-[12px] font-semibold leading-none uppercase tracking-[1.2px] text-primary-deep bg-tint-lavender px-3 py-[7px] rounded-full mb-6">
+                        <div className="inline-flex items-center gap-2 text-[12px] font-semibold leading-none uppercase tracking-[1.2px] text-brand-orange-deep bg-tint-peach px-3 py-[7px] rounded-full mb-6">
                             <span className="w-[6px] h-[6px] rounded-full bg-primary shrink-0" />
                             구직자를 위한 면접 노트
                         </div>
@@ -75,7 +75,7 @@ export default function Home() {
                                 { name: '당근', pos: 'Product Designer', status: 'interview', dday: 'D-5', ddayVariant: 'soon' },
                                 { name: '무신사', pos: 'Sr. Product Designer', status: 'interview', dday: 'D-12', ddayVariant: 'later' },
                             ]} />
-                            <KanbanCol title="결과 대기" dotColor="var(--primary)" count={2} cards={[
+                            <KanbanCol title="결과 대기" dotColor="var(--brand-purple)" count={2} cards={[
                                 { name: '토스', pos: 'Frontend Engineer', status: 'waiting' },
                                 { name: '리디', pos: 'UX Designer', status: 'waiting' },
                             ]} />
@@ -234,8 +234,10 @@ export default function Home() {
             <footer className="bg-canvas border-t border-hairline px-8 py-10 max-[720px]:px-5">
                 <div className="max-w-[1200px] mx-auto flex justify-between items-center gap-6 flex-wrap text-[11px] text-steel">
                     <div className="flex items-center gap-3">
-                        <div className="w-7 h-7 rounded-lg bg-primary text-white grid place-items-center font-bold text-[12px]">H</div>
-                        <span className="font-semibold text-ink text-[12px]">Hunty</span>
+                        <span className="relative inline-block font-extrabold text-[15px] tracking-[-0.5px] text-ink pr-[9px] leading-none">
+                            Hunty
+                            <span className="absolute top-0 right-0 w-[6px] h-[6px] rounded-full" style={{ background: '#ff7a2e' }} aria-hidden="true" />
+                        </span>
                         <span>© 2026 Hunty Inc.</span>
                     </div>
                     <div className="flex gap-6">
@@ -315,7 +317,7 @@ const FEATURES = [
     {
         title: '칸반 보드로 상태 한눈에',
         desc: '지원 완료부터 결과 대기까지 — 드래그 하나로 단계를 옮기고, 진행 상황을 한 화면에서 파악하세요.',
-        iconBg: 'var(--tint-lavender)', iconColor: 'var(--primary)',
+        iconBg: 'var(--tint-peach)', iconColor: 'var(--primary)',
         icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2.5" y="2.5" width="6" height="6" rx="1.2" stroke="currentColor" strokeWidth="1.5" /><rect x="11.5" y="2.5" width="6" height="6" rx="1.2" stroke="currentColor" strokeWidth="1.5" /><rect x="2.5" y="11.5" width="6" height="6" rx="1.2" stroke="currentColor" strokeWidth="1.5" /><rect x="11.5" y="11.5" width="6" height="6" rx="1.2" stroke="currentColor" strokeWidth="1.5" /></svg>,
     },
     {

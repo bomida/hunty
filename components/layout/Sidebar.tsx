@@ -64,8 +64,10 @@ export default function Sidebar({ name, email, avatarUrl }: Props) {
         <aside className="sidebar">
             {/* 브랜드 */}
             <div className="sb-brand">
-                <div className="mark">H</div>
-                <div className="name">Hunty</div>
+                <span className="sb-logo">
+                    Hunty
+                    <span className="sb-logo-dot" aria-hidden="true" />
+                </span>
             </div>
 
             {/* 네비게이션 */}
