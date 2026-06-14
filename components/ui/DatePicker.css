@@ -1,0 +1,343 @@
+/* ── Range wrapper ─────────────────────────────────────────────────────────── */
+.dp-range {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.dp-sep {
+    color: var(--stone);
+    font-size: 13px;
+    user-select: none;
+    flex-shrink: 0;
+}
+
+/* ── Trigger button ────────────────────────────────────────────────────────── */
+.dp-trigger {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 6px;
+    border: none;
+    border-radius: var(--r-md);
+    background: none;
+    cursor: pointer;
+    width: 110px;
+    transition: background 0.1s;
+}
+
+.dp-trigger.is-active {
+    outline: none;
+}
+
+.dp-trigger-icon {
+    color: var(--stone);
+    flex-shrink: 0;
+}
+
+.dp-trigger-val {
+    flex: 1;
+    font-size: 13px;
+    color: var(--ink);
+    letter-spacing: 0.2px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.dp-trigger-placeholder {
+    flex: 1;
+    font-size: 13px;
+    color: var(--stone);
+    text-align: left;
+}
+
+/* ── Popup ─────────────────────────────────────────────────────────────────── */
+.dp-popup {
+    position: absolute;
+    top: calc(100% + 6px);
+    z-index: 200;
+    background: var(--canvas);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-lg);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10), 0 2px 6px rgba(0, 0, 0, 0.06);
+    padding: 16px;
+    width: 284px;
+    animation: dp-in 0.12s ease;
+}
+
+.dp-popup--left  { left: 0; }
+.dp-popup--right { right: 0; }
+
+@keyframes dp-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Shared header row ─────────────────────────────────────────────────────── */
+.dp-cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.dp-nav-group {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.dp-nav-btn {
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border: none;
+    background: none;
+    border-radius: var(--r-sm);
+    cursor: pointer;
+    color: var(--steel);
+    transition: background 0.1s, color 0.1s;
+    padding: 0;
+}
+
+.dp-nav-btn:hover {
+    background: var(--surface-soft);
+    color: var(--ink);
+}
+
+/* ── Calendar title ────────────────────────────────────────────────────────── */
+.dp-cal-title {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: var(--r-sm);
+    letter-spacing: -0.2px;
+    transition: background 0.1s;
+}
+
+.dp-cal-title:hover {
+    background: var(--surface-soft);
+}
+
+/* ── Weekday row ───────────────────────────────────────────────────────────── */
+.dp-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 2px;
+}
+
+.dp-weekday {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--stone);
+    padding: 4px 0;
+    letter-spacing: 0.2px;
+}
+
+.dp-weekday.is-sun {
+    color: #c0481a;
+}
+
+/* ── Day grid ──────────────────────────────────────────────────────────────── */
+.dp-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.dp-day-cell {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+}
+
+/* range band */
+.dp-band {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 28px;
+    left: 0;
+    right: 0;
+    background: #fde8d0;
+    pointer-events: none;
+}
+
+.dp-band.is-from {
+    left: 50%;
+    right: 0;
+}
+
+.dp-band.is-to {
+    left: 0;
+    right: 50%;
+}
+
+/* day button */
+.dp-day {
+    position: relative;
+    z-index: 1;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    border: none;
+    background: none;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s;
+    flex-shrink: 0;
+    padding: 0;
+}
+
+.dp-day:hover:not(.is-selected):not(.is-other) {
+    background: var(--surface-soft);
+}
+
+.dp-day.is-other {
+    color: var(--stone);
+    font-weight: 400;
+}
+
+.dp-day.is-sun {
+    color: #c0481a;
+}
+
+.dp-day.is-today {
+    border: 1.5px solid var(--primary);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.dp-day.is-selected {
+    background: var(--primary);
+    color: #fff;
+    font-weight: 700;
+}
+
+/* ── Panel shared ──────────────────────────────────────────────────────────── */
+.dp-panel-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.2px;
+}
+
+.dp-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: var(--r-sm);
+    color: var(--ink);
+    transition: background 0.1s;
+}
+
+.dp-back-btn:hover {
+    background: var(--surface-soft);
+}
+
+/* ── Year grid ─────────────────────────────────────────────────────────────── */
+.dp-year-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+}
+
+.dp-year-btn {
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border: none;
+    background: none;
+    border-radius: var(--r-md);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s;
+    padding: 0;
+}
+
+.dp-year-btn:hover:not(.is-selected) {
+    background: var(--surface-soft);
+}
+
+.dp-year-btn.in-range {
+    background: #fde8d0;
+    color: #7a3000;
+}
+
+.dp-year-btn.is-bound {
+    background: #f5a060;
+    color: #fff;
+    font-weight: 600;
+}
+
+.dp-year-btn.is-selected {
+    background: var(--primary);
+    color: #fff;
+    font-weight: 700;
+}
+
+/* ── Month grid ────────────────────────────────────────────────────────────── */
+.dp-month-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+}
+
+.dp-month-btn {
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border: none;
+    background: none;
+    border-radius: var(--r-md);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s;
+    padding: 0;
+}
+
+.dp-month-btn:hover:not(.is-selected) {
+    background: var(--surface-soft);
+}
+
+.dp-month-btn.in-range {
+    background: #fde8d0;
+    color: #7a3000;
+}
+
+.dp-month-btn.is-bound {
+    background: #f5a060;
+    color: #fff;
+    font-weight: 600;
+}
+
+.dp-month-btn.is-selected {
+    background: var(--primary);
+    color: #fff;
+    font-weight: 700;
+}

@@ -6,6 +6,16 @@ import { type Application } from '@/lib/supabase/applications'
 import { type CodeItem } from '@/lib/supabase/codes'
 import { APPLY_STATUS_VARIANT } from '@/lib/codes'
 import ApplicationsTable, { type StatusMap, type PlatformMap } from './ApplicationsTable'
+import { DateRangePicker } from '@/components/ui/DatePicker'
+
+function getDefaultDates() {
+    const today = new Date()
+    const from = new Date(today)
+    from.setMonth(from.getMonth() - 3)
+    const fmt = (d: Date) =>
+        `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+    return { dateFrom: fmt(from), dateTo: fmt(today) }
+}
 
 type Props = {
     data: Application[]
@@ -15,24 +25,35 @@ type Props = {
 }
 
 export default function CompaniesContent({ data, statusCodes, statusMap, platformMap }: Props) {
+    const defaults = getDefaultDates()
     const [query, setQuery] = useState('')
     const [filter, setFilter] = useState('ALL')
+    const [dateFrom, setDateFrom] = useState(defaults.dateFrom)
+    const [dateTo, setDateTo] = useState(defaults.dateTo)
 
     const filters = [
         { key: 'ALL', label: '전체', variant: '' },
         ...statusCodes.map(c => ({ key: c.sub_code, label: c.code_name, variant: APPLY_STATUS_VARIANT[c.sub_code] ?? '' })),
     ]
 
+    const fromYmd = dateFrom.replace(/-/g, '')
+    const toYmd = dateTo.replace(/-/g, '')
+
+    const dateFiltered = data.filter(a => {
+        const ymd = a.apply_date_fr ?? a.insert_time.slice(0, 10).replace(/-/g, '')
+        return ymd >= fromYmd && ymd <= toYmd
+    })
+
     const searched = query.trim()
-        ? data.filter(a => a.company_name.toLowerCase().includes(query.toLowerCase()))
-        : data
+        ? dateFiltered.filter(a => a.company_name.toLowerCase().includes(query.toLowerCase()))
+        : dateFiltered
 
     const filtered = filter === 'ALL'
         ? searched
         : searched.filter(app => app.apply_status === filter)
 
     const countFor = (key: string) =>
-        key === 'ALL' ? data.length : data.filter(a => a.apply_status === key).length
+        key === 'ALL' ? dateFiltered.length : dateFiltered.filter(a => a.apply_status === key).length
 
     return (
         <>
@@ -67,8 +88,17 @@ export default function CompaniesContent({ data, statusCodes, statusMap, platfor
                     ))}
                 </div>
 
-                {/* 툴바: [검색] ··· [지원추가] */}
+                {/* 툴바: [날짜범위] [검색] ··· [지원추가] */}
                 <div className="flex items-center gap-2">
+                    <DateRangePicker
+                        from={dateFrom}
+                        to={dateTo}
+                        onFromChange={setDateFrom}
+                        onToChange={setDateTo}
+                    />
+
+                    <div style={{ width: 1, height: 20, background: 'var(--hairline)', flexShrink: 0, margin: '0 2px' }} />
+
                     <div className={`search-box${query ? ' has-val' : ''}`}>
                         <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
                             <circle cx="7" cy="7" r="4.5" stroke="currentColor" strokeWidth="1.4" />

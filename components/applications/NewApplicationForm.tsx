@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import type { CodeItem } from '@/lib/supabase/codes'
 import type { SavePayload } from '@/app/(protected)/companies/new/actions'
 import { APPLY_STATUS_VARIANT } from '@/lib/codes'
+import { DateSinglePicker } from '@/components/ui/DatePicker'
 
 /* ── BtnSpinner ──────────────────────────────────────────────────────── */
 
@@ -401,36 +402,23 @@ export default function NewApplicationForm({
 
                                 {/* 오른쪽 열 */}
                                 <div className="nf-col">
-                                    <Field label="마감일" optional htmlFor="deadline">
-                                        <input
-                                            id="deadline"
-                                            className="input"
-                                            type="text"
-                                            inputMode="numeric"
-                                            placeholder="YYYY-MM-DD"
-                                            maxLength={10}
+                                    <Field label="마감일" optional>
+                                        <DateSinglePicker
                                             value={form.deadline}
-                                            autoComplete="off"
-                                            onChange={e => setField('deadline', maskDate(e.target.value))}
+                                            onChange={v => setField('deadline', v)}
+                                            fullWidth
                                         />
                                     </Field>
 
                                     <Field
                                         label="면접일"
                                         optional
-                                        htmlFor="interviewDate"
                                         caption="다음 회차 면접이 확정되면 이 날짜를 업데이트해주세요"
                                     >
-                                        <input
-                                            id="interviewDate"
-                                            className="input"
-                                            type="text"
-                                            inputMode="numeric"
-                                            placeholder="YYYY-MM-DD"
-                                            maxLength={10}
+                                        <DateSinglePicker
                                             value={form.interviewDate}
-                                            autoComplete="off"
-                                            onChange={e => setField('interviewDate', maskDate(e.target.value))}
+                                            onChange={v => setField('interviewDate', v)}
+                                            fullWidth
                                         />
                                     </Field>
                                 </div>

@@ -86,6 +86,7 @@ export type Application = {
     apply_position: string | null
     apply_platform: string | null
     apply_platform_memo: string | null
+    apply_date_fr: string | null
     apply_date_to: string | null
     interview_date: string | null
     insert_time: string
@@ -111,7 +112,7 @@ export async function getApplicationById(
 
     const { data: app, error } = await supabase
         .from('jobApplication')
-        .select('application_id, company_name, apply_status, apply_position, apply_platform, apply_platform_memo, contract_type, apply_date_to, interview_date, memo, work_type, job_post_url, requirements, benefits, insert_time')
+        .select('application_id, company_name, apply_status, apply_position, apply_platform, apply_platform_memo, contract_type, apply_date_fr, apply_date_to, interview_date, memo, work_type, job_post_url, requirements, benefits, insert_time')
         .eq('application_id', applicationId)
         .eq('id', userId)
         .single()
@@ -202,7 +203,7 @@ export async function getKanbanApplications(userId: string): Promise<Application
     const supabase = await createClient()
     const { data, error } = await supabase
         .from('jobApplication')
-        .select('application_id, company_name, apply_status, apply_position, apply_platform, apply_platform_memo, apply_date_to, interview_date, insert_time')
+        .select('application_id, company_name, apply_status, apply_position, apply_platform, apply_platform_memo, apply_date_fr, apply_date_to, interview_date, insert_time')
         .eq('id', userId)
         .order('insert_time', { ascending: false })
     if (error) throw error
